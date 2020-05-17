@@ -1,6 +1,6 @@
 import * as highlightjs from "highlight.js";
 import { getTheme } from "./theme";
-const { JSDOM } = require ("jsdom");
+const { JSDOM } = require("jsdom");
 
 interface GeneratorOptions {
     theme: {
@@ -103,7 +103,7 @@ function generateSVG(code: string, options: GeneratorOptions): string {
                 }) => {
                     const { nodeName, textContent, className } = element;
                     if (textContent === "\n") return "";
-                    console.log({ nodeName, className, textContent });
+
                     const color =
                         nodeName === "SPAN" && options.theme[`.${className}`]
                             ? options.theme[`.${className}`].color
