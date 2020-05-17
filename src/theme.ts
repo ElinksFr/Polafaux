@@ -3,7 +3,7 @@ const path = require("path");
 
 const postcss = require("postcss");
 
-async function listThemes() {
+async function listThemes(): Promise<Array<string>> {
   const directoryPath = path.join(
     __dirname,
     "../node_modules/highlight.js/styles"
