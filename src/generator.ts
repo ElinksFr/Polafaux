@@ -51,7 +51,7 @@ function generateSVG(code: string, options: GeneratorOptions): string {
         return rect;
     }
 
-    function drawLine(x: number, y: number, dx: number, color: string = "") {
+    function drawLine(x: number, y: number, dx: number, color: string) {
         let output = "";
         if (Math.abs(dx) > 0) {
             const x1 = x * options.fontSize + options.margin;
