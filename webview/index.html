@@ -15,17 +15,6 @@
         align-items: center;
         justify-content: center;
       }
-      /* #snippet {
-        overflow: scroll;
-        resize: both;
-        display: flex;
-        padding: 18px;
-        margin-top: 32px;
-        margin-bottom: 32px;
-        border-radius: 5px;
-        box-shadow: rgba(0, 0, 0, 0.55) 0px 20px 68px;
-        width: calc(100% - 8rem);
-      } */
 
       #snippet {
         /* display: flex;   */
@@ -53,6 +42,34 @@
   </head>
 
   <body>
+    <div id="options">
+      <form>
+        <label for="themeNames">Theme:</label>
+        <select id="themeNames"></select>
+
+        <label for="fontSize">Font size:</label>
+        <input id="fontSize" type="number" />
+
+        <label for="leading">Leading space between lines:</label>
+        <input id="leading" type="number" />
+
+        <label for="lineCap">Line aspect:</label>
+        <select id="lineCap">
+          <option value="round">round</option>
+          <option value="square">square</option>
+        </select>
+
+        <label for="margin">Space between canvas edges and code block:</label>
+        <input id="margin" type="number" />
+
+        <label for="lineNumbers">Include line numbers:</label>
+        <input id="lineNumbers" type="checkbox" />
+
+        <label for="lineNumberOffset">Line number offset from margin:</label>
+        <input id="lineNumberOffset" type="number" />
+      </form>
+    </div>
+
     <div id="snippet"></div>
 
     <div id="save-container">

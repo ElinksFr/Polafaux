@@ -19,6 +19,8 @@ export async function activate(context: vscode.ExtensionContext) {
   const options = await getDefaultOptions()
 
   let svg: string
+  let text: string
+  let language: string
   vscode.window.registerWebviewPanelSerializer("polafaux", {
     async deserializeWebviewPanel(_panel, state) {
       panel = _panel;
@@ -27,10 +29,6 @@ export async function activate(context: vscode.ExtensionContext) {
         type: "restore",
         innerHTML: state.innerHTML,
         bgColor: context.globalState.get("polafaux.bgColor", "#2e3440"),
-      });
-      panel.webview.postMessage({
-        type: "themeNames",
-        themeNames
       });
       const selectionListener = setupSelectionSync();
       panel.onDidDispose(() => {
@@ -56,10 +54,26 @@ export async function activate(context: vscode.ExtensionContext) {
           }
           break;
         case "updateOptions":
+          Object.assign(options, data.options)
+
+          svg = generateSVG(text, { ...options, language })
           panel.webview.postMessage({
-            type: "restoreBgColor",
-            bgColor: context.globalState.get("polafaux.bgColor", "#2e3440"),
-          });
+            type: "update",
+            svg
+          })
+
+          break;
+        case "changeTheme":
+          const { targetTheme } = data
+
+          options.themeName = targetTheme
+          options.theme = await getTheme(targetTheme)
+
+          svg = generateSVG(text, { ...options, language })
+          panel.webview.postMessage({
+            type: "update",
+            svg
+          })
 
           break;
       }
@@ -71,14 +85,14 @@ export async function activate(context: vscode.ExtensionContext) {
       if (selections[0] && !selections[0].isEmpty) {
         const { document } = textEditor
 
-        const language = document.languageId
-        const text = document.getText(textEditor.selection)
+        language = document.languageId
+        text = document.getText(textEditor.selection)
 
         svg = generateSVG(text, { ...options, language })
         panel.webview.postMessage({
           type: "update",
           svg
-        });
+        })
       }
     });
   }
@@ -113,14 +127,11 @@ export async function activate(context: vscode.ExtensionContext) {
 
       setupMessageListeners();
 
-      const fontFamily = vscode.workspace.getConfiguration("editor").fontFamily;
-      const bgColor = context.globalState.get("polafaux.bgColor", "#2e3440");
       panel.webview.postMessage({
         type: "init",
-        fontFamily,
-        bgColor,
-      });
-
+        themeNames,
+        options
+      })
     }
   );
 
