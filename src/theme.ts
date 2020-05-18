@@ -28,7 +28,7 @@ async function getTheme(name: string) {
   const rules = nodes.filter((node: { type: string }) => node.type === "rule");
 
   const mappingSelectorsRules: {
-    [key: string]: any;
+    [key: string]: { [property: string]: string };
   } = {};
 
   rules.forEach(
@@ -36,7 +36,7 @@ async function getTheme(name: string) {
       const selectors = rule.selectors || [rule.selector];
 
       interface Declaration {
-        property: string;
+        prop: string; // Property such as "color", "font-style", "background"...
         value: string;
       }
 
@@ -45,11 +45,11 @@ async function getTheme(name: string) {
       );
 
       selectors.forEach((selector: string) => {
-        declarations.forEach(({ property, value }) => {
+        declarations.forEach(({ prop, value }) => {
           if (mappingSelectorsRules[selector]) {
-            mappingSelectorsRules[selector][property] = value;
+            mappingSelectorsRules[selector][prop] = value;
           } else {
-            mappingSelectorsRules[selector] = { [property]: value };
+            mappingSelectorsRules[selector] = { [prop]: value };
           }
         });
       });

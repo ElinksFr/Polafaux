@@ -11,13 +11,25 @@ suite("Extension Test Suite", () => {
     assert.isNotEmpty(themes);
   });
 
-  test("getTheme should only containst class starting with .hljs", async () => {
+  test("getTheme should only contains class starting with .hljs", async () => {
     const themes = await listThemes();
 
-    const theme = getTheme(themes[Math.floor(Math.random() * themes.length)]);
+    const theme = await getTheme(themes[Math.floor(Math.random() * themes.length)]);
 
     for (const key in theme) {
       assert.equal(key.slice(0, 4), ".hljs");
+    }
+  });
+
+  test("getTheme should only contains class with properties not undefined", async () => {
+    const themes = await listThemes();
+
+    const theme = await getTheme(themes[Math.floor(Math.random() * themes.length)]);
+
+    for (const key in theme) {
+      for (const property in theme[key]) {
+        assert.isDefined(property)
+      }
     }
   });
 });
