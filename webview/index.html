@@ -1,171 +1,182 @@
+<!DOCTYPE html>
 <html>
-  <head>
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="img-src vscode-resource: data: https:; script-src vscode-resource:; style-src 'unsafe-inline' vscode-resource:;"
-    />
-    <style>
-      html {
-        box-sizing: border-box;
-        padding-top: 32px;
-      }
-      body {
-        display: flex;
-        flex-flow: column;
-        align-items: center;
-        justify-content: center;
-      }
 
-      #snippet {
-        /* display: flex;   */
-        align-items: center;
-        text-align: center;
-        width: 90%;
-      }
+<head>
+  <meta http-equiv="Content-Security-Policy"
+    content="img-src vscode-resource: data: https:; script-src vscode-resource:; style-src 'unsafe-inline' vscode-resource:;" />
+  <style>
+    html {
+      box-sizing: border-box;
+      padding-top: 32px;
+    }
 
-      #save-container {
-        margin-top: 40px;
-        margin-bottom: 60px;
-        text-align: center;
-      }
-      .obturateur {
-        width: 64px;
-        height: 64px;
-      }
-      .obturateur * {
-        transition: stroke 0.4s;
-      }
-      .obturateur:not(.filling) path {
-        opacity: 0.5;
-      }
-    </style>
-  </head>
+    body {
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--vscode-font-family);
+      font-size: var(--vscode-font-size);
+    }
 
-  <body>
-    <div id="options">
-      <form>
-        <label for="themeNames">Theme:</label>
-        <select id="themeNames"></select>
+    #options {
+      background-color: var(--vscode-sideBar-background);
+      color: var(--vscode-menu-foreground);
+      border-radius: 3px;
+    }
 
-        <label for="fontSize">Font size:</label>
-        <input id="fontSize" type="number" />
 
-        <label for="leading">Leading space between lines:</label>
-        <input id="leading" type="number" />
+    select {
+      background: var(--vscode-dropdown-background);
+      color: var(--vscode-dropdown-color);
+      border-color: var(--vscode-dropdown-border);
+    }
 
-        <label for="lineCap">Line aspect:</label>
-        <select id="lineCap">
-          <option value="round">round</option>
-          <option value="square">square</option>
-        </select>
+    select>option {
+      background: var(--vscode-dropdown-background);
+      color: var(--vscode-dropdown-color);
 
-        <label for="margin">Space between canvas edges and code block:</label>
-        <input id="margin" type="number" />
+    }
 
-        <label for="lineNumbers">Include line numbers:</label>
-        <input id="lineNumbers" type="checkbox" />
+    select:focus {
+      background: var(--vscode-input-activeBackground);
+      outline-color: var(--vscode-focusBorder);
+      border-color: var(--vscode-dropdown-border);
 
-        <label for="lineNumberOffset">Line number offset from margin:</label>
-        <input id="lineNumberOffset" type="number" />
-      </form>
-    </div>
+    }
 
-    <div id="snippet"></div>
+    input {
+      background: var(--vscode-input-background);
+      color: var(--vscode-input-color);
 
-    <div id="save-container">
-      <svg
-        id="save"
-        class="obturateur"
-        width="132px"
-        height="132px"
-        viewBox="0 0 132 132"
-        version="1.1"
-        xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
-      >
-        <g
-          id="Page-1"
-          stroke="none"
-          stroke-width="1"
-          fill="none"
-          fill-rule="evenodd"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <g
-            id="obturateur"
-            transform="translate(2.000000, 2.000000)"
-            stroke-width="3"
-          >
-            <circle id="Oval" stroke="#4C566A" cx="64" cy="64" r="64"></circle>
-            <circle
-              id="Oval"
-              stroke="#4C566A"
-              cx="64"
-              cy="64"
-              r="60.9706667"
-            ></circle>
-            <circle
-              id="Oval"
-              stroke="#4C566A"
-              cx="64"
-              cy="64"
-              r="51.8734222"
-            ></circle>
-            <circle
-              id="Oval"
-              stroke="#D8DEE9"
-              cx="64"
-              cy="64"
-              r="28.2595556"
-            ></circle>
-            <path
-              d="M17.0965333,86.1788444 L40.5667556,48.1998222"
-              id="Shape"
-              stroke="#EBCB8B"
-            ></path>
-            <path
-              d="M15.1509333,46.5180444 L58.6026667,36.2574222"
-              id="Shape"
-              stroke="#A3BE8C"
-            ></path>
-            <path
-              d="M41.8204444,17.0965333 L79.8001778,40.5660444"
-              id="Shape"
-              stroke="#8FBCBB"
-            ></path>
-            <path
-              d="M81.4819556,15.1502222 L91.7425778,58.6019556"
-              id="Shape"
-              stroke="#88C0D0"
-            ></path>
-            <path
-              d="M110.902756,41.8197333 L87.4332444,79.8001778"
-              id="Shape"
-              stroke="#81A1C1"
-            ></path>
-            <path
-              d="M112.848356,81.4819556 L69.3973333,91.7418667"
-              id="Shape"
-              stroke="#B48EAD"
-            ></path>
-            <path
-              d="M86.1795556,110.902756 L48.1998222,87.4332444"
-              id="Shape"
-              stroke="#BF616A"
-            ></path>
-            <path
-              d="M46.5187556,112.848356 L36.2574222,69.3973333"
-              id="Shape"
-              stroke="#D08770"
-            ></path>
-          </g>
+      outline-color: var(--vscode-input-border);
+      border-color: var(--vscode-input-border);
+      padding: 4px;
+    }
+
+    input:focus {
+      background: var(--vscode-input-activeBackground);
+      border: none;
+
+      outline-style: solid;
+      outline-width: 1px;
+      outline-offset: 0px;
+      outline-color: var(--vscode-focusBorder);
+    }
+
+
+    input[type=checkbox] {
+      background: var(--vscode-checkbox-background);
+      border-color: var(--vscode-checkbox-border) !important;
+      color: var(--vscode-checkbox-color);
+      border-radius: 3px;
+    }
+
+
+
+
+
+    #snippet {
+      /* display: flex;   */
+      align-items: center;
+      text-align: center;
+      width: 90%;
+    }
+
+    #save-container {
+      margin-top: 40px;
+      margin-bottom: 60px;
+      text-align: center;
+    }
+
+    .obturateur {
+      width: 64px;
+      height: 64px;
+    }
+
+    .obturateur * {
+      transition: stroke 0.4s;
+    }
+
+    .obturateur:not(.filling) path {
+      opacity: 0.5;
+    }
+  </style>
+</head>
+
+<body>
+
+
+  <div id="snippet"></div>
+
+  <div id="save-container">
+    <svg id="save" class="obturateur" width="132px" height="132px" viewBox="0 0 132 132" version="1.1"
+      xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round"
+        stroke-linejoin="round">
+        <g id="obturateur" transform="translate(2.000000, 2.000000)" stroke-width="3">
+          <circle id="Oval" stroke="#4C566A" cx="64" cy="64" r="64"></circle>
+          <circle id="Oval" stroke="#4C566A" cx="64" cy="64" r="60.9706667"></circle>
+          <circle id="Oval" stroke="#4C566A" cx="64" cy="64" r="51.8734222"></circle>
+          <circle id="Oval" stroke="#D8DEE9" cx="64" cy="64" r="28.2595556"></circle>
+          <path d="M17.0965333,86.1788444 L40.5667556,48.1998222" id="Shape" stroke="#EBCB8B"></path>
+          <path d="M15.1509333,46.5180444 L58.6026667,36.2574222" id="Shape" stroke="#A3BE8C"></path>
+          <path d="M41.8204444,17.0965333 L79.8001778,40.5660444" id="Shape" stroke="#8FBCBB"></path>
+          <path d="M81.4819556,15.1502222 L91.7425778,58.6019556" id="Shape" stroke="#88C0D0"></path>
+          <path d="M110.902756,41.8197333 L87.4332444,79.8001778" id="Shape" stroke="#81A1C1"></path>
+          <path d="M112.848356,81.4819556 L69.3973333,91.7418667" id="Shape" stroke="#B48EAD"></path>
+          <path d="M86.1795556,110.902756 L48.1998222,87.4332444" id="Shape" stroke="#BF616A"></path>
+          <path d="M46.5187556,112.848356 L36.2574222,69.3973333" id="Shape" stroke="#D08770"></path>
         </g>
-      </svg>
+      </g>
+    </svg>
+  </div>
+
+  <div id="options">
+    <strong style="text-align: center; margin: auto; width: 80%; display: block;">Options for the generated svg</strong>
+    <br />
+
+    <div style="text-align: center; margin: auto; width: 80%; display: block;">
+      <strong>Theme: </strong>
+      <select id="themeNames"></select> <br />
     </div>
 
-    <!-- <script src="./dom2image.js"></script> -->
-    <!-- <script src="./vivus.js"></script> -->
-    <script src="./index.js"></script>
-  </body>
+    <div id="left" style="float: left; padding: 20px; width: 40%;">
+      <strong>Line Cap</strong> <br />
+      <select id="lineCap">
+        <option value="round">round</option>
+        <option value="square">square</option>
+      </select><br />
+
+      <strong>Font Size</strong> <br />
+      <input id="fontSize" type="number" />
+      <br />
+
+      <strong>Leading</strong> <br />
+      <input id="leading" type="number" />
+      <br />
+    </div>
+    <div id="right" style="float: right; padding: 20px; width: 40%;">
+      <strong>Margin</strong> <br />
+      <input id="margin" type="number" />
+      <br />
+
+      <strong>Line Numbers</strong> <br />
+      <input id="lineNumbers" type="checkbox" />
+      <br />
+
+      <strong>Line Numbers Offset</strong> <br />
+      <input id="lineNumberOffset" type="number" />
+    </div>
+
+
+
+
+  </div>
+
+  <!-- <script src="./dom2image.js"></script> -->
+  <!-- <script src="./vivus.js"></script> -->
+  <script src="./index.js"></script>
+</body>
+
 </html>
