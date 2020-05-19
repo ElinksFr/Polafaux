@@ -10,16 +10,61 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:polafaux.helloWorld"
+		"onCommand:polafaux.activate",
+		"onWebviewPanel:polafaux"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "polafaux.helloWorld",
-				"title": "Hello World"
+				"command": "polafaux.activate",
+				"title": "PolaFaux 📊"
 			}
-		]
+		],
+		"configuration": {
+			"title": "Polafaux",
+			"properties": {
+				"polafaux.themeName": {
+					"type": "string",
+					"description": "Color theme used to generate the svg",
+					"default": "atom-one-dark-reasonable"
+				},
+				"polafaux.fontSize": {
+					"type": "number",
+					"description": "Line thickness and width",
+					"default": 5
+				},
+				"polafaux.leading": {
+					"type": "number",
+					"description": "Space between lines",
+					"default": 10
+				},
+				"polafaux.lineCap": {
+					"type": "string",
+					"description": "Line aspect `square` or `round`",
+					"default": "round",
+					"enum": [
+						"round",
+						"square"
+					]
+				},
+				"polafaux.margin": {
+					"type": "number",
+					"description": "Space between canvas edges and code block",
+					"default": 50
+				},
+				"polafaux.lineNumbers": {
+					"type": "boolean",
+					"description": "Whether or not to include line numbers",
+					"default": false
+				},
+				"polafaux.lineNumberOffset": {
+					"type": "number",
+					"description": "Line number offset from margin",
+					"default": -3
+				}
+			}
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
