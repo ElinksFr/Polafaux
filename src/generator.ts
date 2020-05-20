@@ -151,8 +151,10 @@ function generateSVG(code: string, options: GeneratorOptions): string {
         const maxLength = Math.max(...linesLength);
         return maxLength * options.fontSize + options.margin * 2;
     }
-    const higlighted = options.language
-        ? highlightjs.highlight(options.language, code)
+
+    const language = options.language
+    const higlighted = language && highlightjs.listLanguages().includes(language)
+        ? highlightjs.highlight(language, code)
         : highlightjs.highlightAuto(code);
 
     const lines: Array<Array<Node>> = higlighted.value.split("\n").map((line) => {
