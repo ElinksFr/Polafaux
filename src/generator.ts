@@ -36,6 +36,7 @@ interface Node {
     nodeName: string;
     textContent: string;
     className: string | undefined;
+    childNodes: any;
 }
 
 function generateSVG(code: string, options: GeneratorOptions): string {
@@ -90,20 +91,33 @@ function generateSVG(code: string, options: GeneratorOptions): string {
             }
         }
         return output;
-    };
+    }
 
-    function createCodeLine(line: Array<Node>, y: number) {
-        let indent = 0;
+    function createCodeLine(
+        line: Array<Node>,
+        y: number,
+        indent: number = 0
+    ): string {
+        //let indent = 0;
         return line
             .map(
                 (element: {
                     nodeName: string;
                     textContent: string;
                     className: string | undefined;
+                    childNodes: any;
                 }) => {
-                    const { nodeName, textContent, className } = element;
+                    const { nodeName, textContent, className, childNodes } = element;
                     if (textContent === "\n") return "";
-
+                    if (childNodes.length > 1) {
+                        const tmp = createCodeLine(Array.from(childNodes), y, indent);
+                        indent += textContent.length;
+                        return tmp;
+                    }
+                    // childNodes.forEach((child: any) => {
+                    //     console.log(child)
+                    // });
+                    // console.log(childNodes)
                     const color =
                         nodeName === "SPAN" && options.theme[`.${className}`]
                             ? options.theme[`.${className}`].color
@@ -152,10 +166,11 @@ function generateSVG(code: string, options: GeneratorOptions): string {
         return maxLength * options.fontSize + options.margin * 2;
     }
 
-    const language = options.language
-    const higlighted = language && highlightjs.listLanguages().includes(language)
-        ? highlightjs.highlight(language, code)
-        : highlightjs.highlightAuto(code);
+    const language = options.language;
+    const higlighted =
+        language && highlightjs.listLanguages().includes(language)
+            ? highlightjs.highlight(language, code)
+            : highlightjs.highlightAuto(code);
 
     const lines: Array<Array<Node>> = higlighted.value.split("\n").map((line) => {
         const { document } = new JSDOM(`<body>${line}</body>`).window;
