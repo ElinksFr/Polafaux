@@ -5,9 +5,26 @@ import path = require("path");
 import fs = require("fs");
 
 import { listThemes, getTheme } from "./theme"
-import { getDefaultOptions, generateSVG } from "./generator"
+import { generateSVG, GeneratorOptions } from "./generator"
 
 const P_TITLE = "PolaFaux 📊";
+
+async function getOptionsFromConfig(): Promise<GeneratorOptions> {
+  const config = vscode.workspace.getConfiguration('polafaux')
+  const theme = await getTheme(config.themeName)
+
+  return {
+    theme,
+    themeName: config.themeName,
+    fontSize: config.fontSize,
+    leading: config.leading,
+    lineCap: config.lineCap,
+    margin: config.margin,
+    lineNumbers: config.lineNumbers,
+    lineNumberOffset: config.lineNumberOffset
+  }
+}
+
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -16,7 +33,7 @@ export async function activate(context: vscode.ExtensionContext) {
   let panel: vscode.WebviewPanel;
 
   const themeNames = await listThemes()
-  const options = await getDefaultOptions()
+  const options = await getOptionsFromConfig();
 
   let svg: string
   let text: string

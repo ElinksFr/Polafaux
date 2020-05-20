@@ -78,6 +78,7 @@ window.addEventListener("message", (event) => {
           lineNumbers,
           lineNumberOffset,
         } = options;
+        themeNames.value = options.themeName;
 
         document.getElementById("fontSize").value = fontSize;
         document.getElementById("leading").value = leading;
