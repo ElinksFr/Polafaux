@@ -44,8 +44,8 @@ export async function activate(context: vscode.ExtensionContext) {
       panel.webview.html = await getHtmlContent(htmlPath);
       panel.webview.postMessage({
         type: "restore",
-        innerHTML: state.innerHTML,
-        bgColor: context.globalState.get("polafaux.bgColor", "#2e3440"),
+        ...state,
+        themeNames
       });
       const selectionListener = setupSelectionSync();
       panel.onDidDispose(() => {
@@ -113,6 +113,16 @@ export async function activate(context: vscode.ExtensionContext) {
       }
     });
   }
+  async function getHtmlContent(htmlPath: string) {
+    const htmlContent = await fs.promises.readFile(htmlPath, "utf-8");
+    return htmlContent.replace(/script src="([^"]*)"/g, (match, src) => {
+      const onDisk = vscode.Uri.file(path.resolve(htmlPath, "..", src))
+      const realSource = panel.webview.asWebviewUri(onDisk);
+
+      return `script src="${realSource}"`;
+    });
+  }
+
 
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand
@@ -155,7 +165,8 @@ export async function activate(context: vscode.ExtensionContext) {
 async function getHtmlContent(htmlPath: string) {
   const htmlContent = await fs.promises.readFile(htmlPath, "utf-8");
   return htmlContent.replace(/script src="([^"]*)"/g, (match, src) => {
-    const realSource = "vscode-resource:" + path.resolve(htmlPath, "..", src);
+    const realSource = path.resolve(htmlPath, "..", src);
+
     return `script src="${realSource}"`;
   });
 }
