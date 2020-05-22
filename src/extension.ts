@@ -63,7 +63,7 @@ export async function activate(context: vscode.ExtensionContext) {
         case "shoot":
           const savePath = await vscode.window.showSaveDialog({
             filters: {
-              Images: ["png"],
+              Images: ["svg"],
             },
           })
 
