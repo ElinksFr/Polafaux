@@ -17,7 +17,7 @@ suite("Extension Test Suite", () => {
     const theme = await getTheme(themes[Math.floor(Math.random() * themes.length)]);
 
     for (const key in theme) {
-      assert.equal(key.slice(0, 4), ".hljs");
+      assert.equal(key.slice(0, 5), ".hljs");
     }
   });
 
