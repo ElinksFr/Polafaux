@@ -5,7 +5,7 @@ import * as isSvg from "is-svg";
 
 import {
   getDefaultOptions,
-  generateSVG,
+  Generator,
   GeneratorOptions,
 } from "../../generator";
 
@@ -19,7 +19,7 @@ suite("Extension Test Suite", () => {
   });
 
   test("Should return a valid svg with defaultOptions and empty code", async () => {
-    const svg = generateSVG("", defaultOptions);
+    const svg = new Generator("", defaultOptions).generateSvg();
     assert.isTrue(isSvg(svg));
   });
 
@@ -33,7 +33,7 @@ int main() {
     return 0;
 }`;
 
-    const svg = generateSVG(cppCode, defaultOptions);
+    const svg = new Generator(cppCode, defaultOptions).generateSvg();
     assert.isTrue(isSvg(svg));
   });
 
@@ -44,7 +44,7 @@ print("coucou")
 
 def sxdsd(arg1):
     arg1.do_something()`;
-    const svg = generateSVG(pyCode, defaultOptions);
+    const svg = new Generator(pyCode, defaultOptions).generateSvg();
     assert.isTrue(isSvg(svg));
   });
 
@@ -58,7 +58,7 @@ int main() {
     std::cout << "Hello World!";
     return 0
 }`;
-    const svg = generateSVG(cppCode, defaultOptions);
+    const svg = new Generator(cppCode, defaultOptions).generateSvg();
     assert.isTrue(isSvg(svg));
   });
 
@@ -75,7 +75,7 @@ int main() {
       margin: 30,
     };
 
-    const svg = generateSVG("", options);
+    const svg = new Generator("", options).generateSvg();
     assert.isTrue(isSvg(svg));
   });
 
@@ -100,7 +100,7 @@ int main() {
     return 0;
 }`;
 
-    const svg = generateSVG(cppCode, options);
+    const svg = new Generator(cppCode, options).generateSvg();
     assert.isTrue(isSvg(svg));
   });
 
@@ -123,7 +123,7 @@ print("coucou")
 def sxdsd(arg1):
     arg1.do_something()`;
 
-    const svg = generateSVG(pyCode, options);
+    const svg = new Generator(pyCode, options).generateSvg();
     assert.isTrue(isSvg(svg));
   });
 
@@ -146,12 +146,12 @@ print("coucou")
 def sxdsd(arg1):
     arg1.do_something()`;
     const startNoLang = Date.now();
-    generateSVG(pyCode, options);
+    new Generator(pyCode, defaultOptions).generateSvg();
     const endNoLang = Date.now();
 
     options.language = "python";
     const startWithLang = Date.now();
-    generateSVG(pyCode, options);
+    new Generator(pyCode, defaultOptions).generateSvg();
     const endWithLang = Date.now();
 
     assert.isTrue(endNoLang - startNoLang > endWithLang - startWithLang);

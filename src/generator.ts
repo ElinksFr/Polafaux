@@ -39,166 +39,186 @@ interface Node {
     childNodes: any;
 }
 
-function generateSVG(code: string, options: GeneratorOptions): string {
-    function drawRect(
-        x: number,
-        y: number,
-        width: number,
-        height: number,
-        fillColor: string
-    ) {
-        const fill = fillColor;
-        const rect = `<rect x="${x}" y="${y}" width="${width}" height="${height}" fill="${fill}" />`;
-        return rect;
+
+class Generator {
+    private options: GeneratorOptions;
+
+    private code: string;
+    private highlightedLines: Array<Array<Node>> = [];
+
+    constructor(code: string, options: GeneratorOptions) {
+        this.code = code;
+        this.options = options;
+        this.parseCode(code)
     }
 
-    function drawLine(x: number, y: number, dx: number, color: string) {
-        let output = "";
-        if (Math.abs(dx) > 0) {
-            const x1 = x * options.fontSize + options.margin;
-            const x2 = x1 + dx * options.fontSize;
-            const y1 = y * options.leading + options.margin;
-            const y2 = y1;
 
-            const offset = x > 0 ? options.fontSize / 2 : (options.fontSize / 2) * -1;
-            const strokeAttr = color ? `stroke="${color}" ` : "";
-
-            output += `   <line x1="${x1 + offset}" y1="${y1}" x2="${
-                x2 - offset
-                }" y2="${y2}" ${strokeAttr}/>`;
-        }
-        return output;
+    public updateOptions(newOptions: GeneratorOptions) {
+        this.options = newOptions;
+        return this
     }
+    public parseCode(code: string) {
+        this.code = code
 
-    function splitAndTrim(text: string) {
-        const output = [];
-        const { length } = text;
-        let segment:
-            | { start: number; end?: number; text?: string; length?: number }
-            | undefined;
-        for (let position = 0; position <= length; position += 1) {
-            if (!segment && text[position] !== " ") {
-                segment = { start: position };
-            }
-            if (segment && !segment.end) {
-                if (text[position] === " " || position === length) {
-                    segment.end = position;
-                    segment.text = text.slice(segment.start, segment.end);
-                    segment.length = segment.text.length;
-                    output.push(segment);
-                    segment = undefined;
-                }
-            }
-        }
-        return output;
-    }
+        const language = this.options.language;
+        const highlighted =
+            language && highlightjs.listLanguages().includes(language)
+                ? highlightjs.highlight(language, code)
+                : highlightjs.highlightAuto(code);
 
-    function createCodeLine(
-        line: Array<Node>,
-        y: number,
-        indent: number = 0
-    ): string {
-        //let indent = 0;
-        return line
-            .map(
-                (element: {
-                    nodeName: string;
-                    textContent: string;
-                    className: string | undefined;
-                    childNodes: any;
-                }) => {
-                    const { nodeName, textContent, className, childNodes } = element;
-                    if (textContent === "\n") return "";
-                    if (childNodes.length > 1) {
-                        const tmp = createCodeLine(Array.from(childNodes), y, indent);
-                        indent += textContent.length;
-                        return tmp;
-                    }
-                    // childNodes.forEach((child: any) => {
-                    //     console.log(child)
-                    // });
-                    // console.log(childNodes)
-                    const color =
-                        nodeName === "SPAN" && options.theme[`.${className}`]
-                            ? options.theme[`.${className}`].color
-                            : options.theme[`.hljs`].color;
-                    switch (nodeName) {
-                        case "SPAN":
-                            const line = drawLine(indent, y, textContent.length, color);
-                            indent += textContent.length;
-                            return line;
-                        case "#text":
-                            const lines = splitAndTrim(textContent).map((obj) => {
-                                const { start, text } = obj;
-                                return drawLine(
-                                    indent + start,
-                                    y,
-                                    text ? text.length : 0,
-                                    color
-                                );
-                            });
-                            indent += textContent.length;
-                            return lines;
-                        default:
-                            console.error("Unexpected nodeName");
-                            return [];
-                    }
-                }
-            )
-            .reduce((a: Array<string>, b: Array<string> | string) => a.concat(b), [])
-            .join("\n");
-    }
-    function getHeight() {
-        return (lines.length - 1) * options.leading + options.margin * 2;
-    }
-
-    function getWidth() {
-        const linesLength = lines.map((line): number => {
-            const lineLength = line.reduce(
-                (sum, node) => sum + node.textContent.length,
-                0
-            );
-
-            return lineLength;
+        this.highlightedLines = highlighted.value.split("\n").map((line) => {
+            const { document } = new JSDOM(`<body>${line}</body>`).window;
+            return Array.from(document.body.childNodes);
         });
-
-        const maxLength = Math.max(...linesLength);
-        return maxLength * options.fontSize + options.margin * 2;
+        return this
     }
 
-    const language = options.language;
-    const higlighted =
-        language && highlightjs.listLanguages().includes(language)
-            ? highlightjs.highlight(language, code)
-            : highlightjs.highlightAuto(code);
+    public generateSvg() {
 
-    const lines: Array<Array<Node>> = higlighted.value.split("\n").map((line) => {
-        const { document } = new JSDOM(`<body>${line}</body>`).window;
-        return Array.from(document.body.childNodes);
-    });
+        const drawRect = (
+            x: number,
+            y: number,
+            width: number,
+            height: number,
+            fillColor: string
+        ) => {
+            const fill = fillColor;
+            const rect = `<rect x="${x}" y="${y}" width="${width}" height="${height}" fill="${fill}" />`;
+            return rect;
+        }
 
-    const height = getHeight();
-    const width = getWidth();
+        const drawLine = (x: number, y: number, dx: number, color: string) => {
+            let output = "";
+            if (Math.abs(dx) > 0) {
+                const x1 = x * this.options.fontSize + this.options.margin;
+                const x2 = x1 + dx * this.options.fontSize;
+                const y1 = y * this.options.leading + this.options.margin;
+                const y2 = y1;
 
-    const startSvg = `<svg class="faux code" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">\n`;
-    const endSvg = "</svg>";
-    const background = drawRect(
-        0,
-        0,
-        width,
-        height,
-        options.theme[`.hljs`].background
-    );
+                const offset = x > 0 ? this.options.fontSize / 2 : (this.options.fontSize / 2) * -1;
+                const strokeAttr = color ? `stroke="${color}" ` : "";
 
-    const startG = `<g class="code block" stroke-linecap="${options.lineCap}" stroke-width="${options.fontSize}">\n`;
-    const endG = "</g>\n";
-    const innerCodeBlock = lines
-        .map((line, index) => {
-            return startG + createCodeLine(line, index) + endG;
-        })
-        .join("\n");
-    const codeBlock = startG + innerCodeBlock + endG;
-    return startSvg + background + codeBlock + endSvg;
+                output += `   <line x1="${x1 + offset}" y1="${y1}" x2="${
+                    x2 - offset
+                    }" y2="${y2}" ${strokeAttr}/>`;
+            }
+            return output;
+        }
+
+        const splitAndTrim = (text: string) => {
+            const output = [];
+            const { length } = text;
+            let segment:
+                | { start: number; end?: number; text?: string; length?: number }
+                | undefined;
+            for (let position = 0; position <= length; position += 1) {
+                if (!segment && text[position] !== " ") {
+                    segment = { start: position };
+                }
+                if (segment && !segment.end) {
+                    if (text[position] === " " || position === length) {
+                        segment.end = position;
+                        segment.text = text.slice(segment.start, segment.end);
+                        segment.length = segment.text.length;
+                        output.push(segment);
+                        segment = undefined;
+                    }
+                }
+            }
+            return output;
+        }
+
+        const createCodeLine = (
+            line: Array<Node>,
+            y: number,
+            indent: number = 0
+        ): string => {
+            return line
+                .map(
+                    (element: {
+                        nodeName: string;
+                        textContent: string;
+                        className: string | undefined;
+                        childNodes: any;
+                    }) => {
+                        const { nodeName, textContent, className, childNodes } = element;
+                        if (textContent === "\n") return "";
+                        if (childNodes.length > 1) {
+                            const tmp = createCodeLine(Array.from(childNodes), y, indent);
+                            indent += textContent.length;
+                            return tmp;
+                        }
+                        const color =
+                            nodeName === "SPAN" && this.options.theme[`.${className}`]
+                                ? this.options.theme[`.${className}`].color
+                                : this.options.theme[`.hljs`].color;
+                        switch (nodeName) {
+                            case "SPAN":
+                                const line = drawLine(indent, y, textContent.length, color);
+                                indent += textContent.length;
+                                return line;
+                            case "#text":
+                                const lines = splitAndTrim(textContent).map((obj) => {
+                                    const { start, text } = obj;
+                                    return drawLine(
+                                        indent + start,
+                                        y,
+                                        text ? text.length : 0,
+                                        color
+                                    );
+                                });
+                                indent += textContent.length;
+                                return lines;
+                            default:
+                                console.error("Unexpected nodeName");
+                                return [];
+                        }
+                    }
+                )
+                .reduce((a: Array<string>, b: Array<string> | string) => a.concat(b), [])
+                .join("\n");
+        }
+        const getHeight = () => {
+            return (this.highlightedLines.length - 1) * this.options.leading + this.options.margin * 2;
+        }
+
+        const getWidth = () => {
+            const linesLength = this.highlightedLines.map((line): number => {
+                const lineLength = line.reduce(
+                    (sum, node) => sum + node.textContent.length,
+                    0
+                );
+
+                return lineLength;
+            });
+
+            const maxLength = Math.max(...linesLength);
+            return maxLength * this.options.fontSize + this.options.margin * 2;
+        }
+
+        const height = getHeight();
+        const width = getWidth();
+
+        const startSvg = `<svg class="faux code" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">\n`;
+        const endSvg = "</svg>";
+        const background = drawRect(
+            0,
+            0,
+            width,
+            height,
+            this.options.theme[`.hljs`].background
+        );
+
+        const startG = `<g class="code block" stroke-linecap="${this.options.lineCap}" stroke-width="${this.options.fontSize}">\n`;
+        const endG = "</g>\n";
+        const innerCodeBlock = this.highlightedLines
+            .map((line, index) => {
+                return startG + createCodeLine(line, index) + endG;
+            })
+            .join("\n");
+        const codeBlock = startG + innerCodeBlock + endG;
+        return startSvg + background + codeBlock + endSvg;
+    }
 }
 
-export { GeneratorOptions, getDefaultOptions, generateSVG };
+export { GeneratorOptions, getDefaultOptions, Generator };
