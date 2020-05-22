@@ -66,9 +66,8 @@ export async function activate(context: vscode.ExtensionContext) {
               Images: ["svg"],
             },
           })
-
           if (savePath) {
-            await fs.promises.writeFile(savePath.toString(), data)
+            await fs.promises.writeFile(savePath.fsPath, data)
             vscode.window.showInformationMessage("SVG successfuly saved")
           }
           break;
