@@ -6,6 +6,8 @@ import fs = require("fs");
 
 import { listThemes, getTheme } from "./theme"
 import { generateSVG, GeneratorOptions } from "./generator"
+import { debounce } from './utils'
+
 
 const P_TITLE = "PolaFaux 📊";
 
@@ -96,23 +98,33 @@ export async function activate(context: vscode.ExtensionContext) {
       }
     });
   }
+
+  function sendSvg(event: vscode.TextEditorSelectionChangeEvent) {
+    const { selections, textEditor } = event
+    if (selections[0] && !selections[0].isEmpty) {
+      const { document } = textEditor
+
+      language = document.languageId
+      text = document.getText(textEditor.selection)
+
+      svg = generateSVG(text, { ...options, language })
+      panel.webview.postMessage({
+        type: "update",
+        svg
+      })
+    }
+  }
+
+  const debounceSend = debounce(sendSvg, 200)
+
   function setupSelectionSync() {
     return vscode.window.onDidChangeTextEditorSelection((event) => {
-      const { selections, textEditor } = event
-      if (selections[0] && !selections[0].isEmpty) {
-        const { document } = textEditor
-
-        language = document.languageId
-        text = document.getText(textEditor.selection)
-
-        svg = generateSVG(text, { ...options, language })
-        panel.webview.postMessage({
-          type: "update",
-          svg
-        })
-      }
+      debounceSend(event)
+      // sendSvg(event)
     });
   }
+
+
   async function getHtmlContent(htmlPath: string) {
     const htmlContent = await fs.promises.readFile(htmlPath, "utf-8");
     return htmlContent.replace(/script src="([^"]*)"/g, (match, src) => {
