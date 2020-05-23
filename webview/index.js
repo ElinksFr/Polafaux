@@ -29,7 +29,7 @@ function getCurrentOptions() {
     leading: +document.getElementById("leading").value,
     lineCap: document.getElementById("lineCap").value,
     margin: +document.getElementById("margin").value,
-    lineNumbers: document.getElementById("lineNumbers").value === "true",
+    lineNumbers: document.getElementById("lineNumbers").checked,
     lineNumberOffset: +document.getElementById("lineNumberOffset").value,
     themeName: themeNames.value,
   };
@@ -89,7 +89,7 @@ function init(names, options, svg) {
   document.getElementById("leading").value = leading;
   document.getElementById("lineCap").value = lineCap;
   document.getElementById("margin").value = margin;
-  document.getElementById("lineNumbers").value = lineNumbers;
+  document.getElementById("lineNumbers").checked = lineNumbers;
   document.getElementById("lineNumberOffset").value = lineNumberOffset;
 
   if (svg) {

@@ -1,5 +1,6 @@
 import * as highlightjs from "highlight.js";
 import { getTheme } from "./theme";
+import { range } from "./utils"
 const { JSDOM } = require("jsdom");
 
 interface GeneratorOptions {
@@ -39,7 +40,6 @@ interface Node {
     childNodes: any;
 }
 
-
 class Generator {
     private options: GeneratorOptions;
 
@@ -49,16 +49,15 @@ class Generator {
     constructor(code: string, options: GeneratorOptions) {
         this.code = code;
         this.options = options;
-        this.parseCode(code)
+        this.parseCode(code);
     }
-
 
     public updateOptions(newOptions: GeneratorOptions) {
         this.options = newOptions;
-        return this
+        return this;
     }
     public parseCode(code: string) {
-        this.code = code
+        this.code = code;
 
         const language = this.options.language;
         const highlighted =
@@ -70,11 +69,10 @@ class Generator {
             const { document } = new JSDOM(`<body>${line}</body>`).window;
             return Array.from(document.body.childNodes);
         });
-        return this
+        return this;
     }
 
     public generateSvg() {
-
         const drawRect = (
             x: number,
             y: number,
@@ -85,7 +83,7 @@ class Generator {
             const fill = fillColor;
             const rect = `<rect x="${x}" y="${y}" width="${width}" height="${height}" fill="${fill}" />`;
             return rect;
-        }
+        };
 
         const drawLine = (x: number, y: number, dx: number, color: string) => {
             let output = "";
@@ -95,7 +93,8 @@ class Generator {
                 const y1 = y * this.options.leading + this.options.margin;
                 const y2 = y1;
 
-                const offset = x > 0 ? this.options.fontSize / 2 : (this.options.fontSize / 2) * -1;
+                const offset =
+                    x > 0 ? this.options.fontSize / 2 : (this.options.fontSize / 2) * -1;
                 const strokeAttr = color ? `stroke="${color}" ` : "";
 
                 output += `   <line x1="${x1 + offset}" y1="${y1}" x2="${
@@ -103,7 +102,7 @@ class Generator {
                     }" y2="${y2}" ${strokeAttr}/>`;
             }
             return output;
-        }
+        };
 
         const splitAndTrim = (text: string) => {
             const output = [];
@@ -126,7 +125,7 @@ class Generator {
                 }
             }
             return output;
-        }
+        };
 
         const createCodeLine = (
             line: Array<Node>,
@@ -175,12 +174,34 @@ class Generator {
                         }
                     }
                 )
-                .reduce((a: Array<string>, b: Array<string> | string) => a.concat(b), [])
+                .reduce(
+                    (a: Array<string>, b: Array<string> | string) => a.concat(b),
+                    []
+                )
                 .join("\n");
-        }
+        };
+
+        const createLineNumbers = () => {
+            const color = this.options.theme[`.hljs`].color;
+
+            const startG = `  <g class="line numbers" stroke="${color}" stroke-linecap="${this.options.lineCap}" stroke-width="${this.options.fontSize}">\n`;
+            const body = range(this.highlightedLines.length)
+                .map(y => {
+                    const width = (y + 1).toString().length; // # of digits in line number
+                    return drawLine(this.options.lineNumberOffset, y, -width, color);
+                })
+                .join('\n');
+            const endG = "  </g>\n";
+
+            return startG + body + endG;
+        };
+
         const getHeight = () => {
-            return (this.highlightedLines.length - 1) * this.options.leading + this.options.margin * 2;
-        }
+            return (
+                (this.highlightedLines.length - 1) * this.options.leading +
+                this.options.margin * 2
+            );
+        };
 
         const getWidth = () => {
             const linesLength = this.highlightedLines.map((line): number => {
@@ -194,7 +215,7 @@ class Generator {
 
             const maxLength = Math.max(...linesLength);
             return maxLength * this.options.fontSize + this.options.margin * 2;
-        }
+        };
 
         const height = getHeight();
         const width = getWidth();
@@ -216,8 +237,10 @@ class Generator {
                 return startG + createCodeLine(line, index) + endG;
             })
             .join("\n");
+
+        const lineNumbers = this.options.lineNumbers ? createLineNumbers() : "";
         const codeBlock = startG + innerCodeBlock + endG;
-        return startSvg + background + codeBlock + endSvg;
+        return startSvg + background + codeBlock + lineNumbers + endSvg;
     }
 }
 
