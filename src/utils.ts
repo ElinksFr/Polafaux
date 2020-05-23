@@ -13,4 +13,20 @@ function debounce(func: Function, wait = 200, immediate = false): Function {
     if (callNow) func.apply(context, args);
   };
 };
-export { debounce };
+
+function range(end: number, options?: { start?: number; step?: number; }) {
+  const defaultOptions = { start: 0, step: 1 }
+  const { start = 0, step = 1 } = Object.assign({}, defaultOptions, options);
+
+  const result: number[] = []
+
+  let i = start;
+  while (i < end) {
+    result.push(i)
+    i += step
+  }
+
+  return result
+}
+
+export { debounce, range };
