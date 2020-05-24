@@ -1,65 +1,39 @@
-# polafaux README
+<p>
+  <h2 align="center">Polafaux — Polaroid for your faux-code 📊</h2>
+</p>
 
-This is the README for your extension "polafaux". After writing up a brief description, we recommend including the following sections.
+<!-- ![usage](https://github.com/octref/polacode/raw/master/demo/usage.gif) -->
 
-## Features
+![usage](./demo/usage.gif)
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+## Why?
 
-For example if there is an image subfolder under your extension project workspace:
+Because it is unnecessary therefore essential !
 
-\!\[feature X\]\(images/feature-x.png\)
+Turn real code (Github Gist)
+into faux code (SVG image)
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+The code has to look right.
 
-## Requirements
+## Tips
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+- You can play with the options before saving the svg
+- Default options can be configure with `polafaux.themeName`, `polafaux.fontSize`, `polafaux.leading`, `polafaux.lineCap`, `polafaux.margin`, `polafaux.lineNumbers` and `polafaux.lineNumberOffset`
 
-## Extension Settings
+## Demo
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+Using default options with the theme [atom-one-dark](https://github.com/atom/one-dark-ui)
+![basic](./demo/basic.svg)
 
-For example:
+Using squared lines, including line numbers with the theme [gruvbox-light](https://github.com/morhetz/gruvbox#light-mode)
+![square](./demo/squareNumbers.svg)
 
-This extension contributes the following settings:
+## Credit
 
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+This is a direct reimplemantation of [faux-code-generator](https://github.com/knutsynstad/faux-code-generator) by [@knutsynstad](https://github.com/knutsynstad)
 
-## Known Issues
+The main difference resides on the utilization of [highlight.js](https://highlightjs.org/) instead of relying on github gists.
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+## License
 
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+MIT
