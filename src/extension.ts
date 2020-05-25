@@ -67,7 +67,7 @@ export async function activate(context: vscode.ExtensionContext) {
           });
           if (savePath) {
             await fs.promises.writeFile(savePath.fsPath, data);
-            vscode.window.showInformationMessage("SVG successfuly saved");
+            vscode.window.showInformationMessage("SVG successfully saved");
           }
           break;
         case "updateOptions":
@@ -149,7 +149,7 @@ export async function activate(context: vscode.ExtensionContext) {
       // The code you place here will be executed every time your command is executed
 
       // Display a message box to the user
-      vscode.window.showInformationMessage("Hello World from PolaFaux!");
+      vscode.window.showInformationMessage("Welcome in PolaFaux!");
 
       panel = vscode.window.createWebviewPanel("polafaux", P_TITLE, 2, {
         enableScripts: true,
@@ -176,15 +176,6 @@ export async function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(disposable);
-}
-
-async function getHtmlContent(htmlPath: string) {
-  const htmlContent = await fs.promises.readFile(htmlPath, "utf-8");
-  return htmlContent.replace(/script src="([^"]*)"/g, (match, src) => {
-    const realSource = path.resolve(htmlPath, "..", src);
-
-    return `script src="${realSource}"`;
-  });
 }
 
 // this method is called when your extension is deactivated
