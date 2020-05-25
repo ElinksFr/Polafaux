@@ -126,27 +126,3 @@ obturateur.addEventListener("click", () => {
     data: snippetNode.innerHTML,
   });
 });
-
-let isInAnimation = false;
-
-obturateur.addEventListener("mouseover", () => {
-  if (!isInAnimation) {
-    isInAnimation = true;
-
-    new Vivus(
-      "save",
-      {
-        duration: 40,
-        onReady: () => {
-          obturateur.className = "obturateur filling";
-        },
-      },
-      () => {
-        setTimeout(() => {
-          isInAnimation = false;
-          obturateur.className = "obturateur";
-        }, 700);
-      }
-    );
-  }
-});
