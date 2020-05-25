@@ -10,7 +10,7 @@
 
 Because it is unnecessary therefore essential !
 
-Turn real code (Github Gist)
+Turn real code (From VS Code)
 into faux code (SVG image)
 
 The code has to look right.
