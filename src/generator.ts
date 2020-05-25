@@ -86,22 +86,20 @@ class Generator {
         };
 
         const drawLine = (x: number, y: number, dx: number, color: string) => {
-            let output = "";
-            if (Math.abs(dx) > 0) {
-                const x1 = x * this.options.fontSize + this.options.margin;
-                const x2 = x1 + dx * this.options.fontSize;
-                const y1 = y * this.options.leading + this.options.margin;
-                const y2 = y1;
+            if (Math.abs(dx) < 0) return ""
 
-                const offset =
-                    x > 0 ? this.options.fontSize / 2 : (this.options.fontSize / 2) * -1;
-                const strokeAttr = color ? `stroke="${color}" ` : "";
+            const x1 = x * this.options.fontSize + this.options.margin;
+            const x2 = x1 + dx * this.options.fontSize;
+            const y1 = y * this.options.leading + this.options.margin;
+            const y2 = y1;
 
-                output += `   <line x1="${x1 + offset}" y1="${y1}" x2="${
-                    x2 - offset
-                    }" y2="${y2}" ${strokeAttr}/>`;
-            }
-            return output;
+            const offset =
+                x > 0 ? this.options.fontSize / 2 : (this.options.fontSize / 2) * -1;
+            const strokeAttr = color ? `stroke="${color}" ` : "";
+
+            return `   <line x1="${x1 + offset}" y1="${y1}" x2="${
+                x2 - offset
+                }" y2="${y2}" ${strokeAttr}/>`;
         };
 
         const splitAndTrim = (text: string) => {

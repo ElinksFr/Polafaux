@@ -104,22 +104,23 @@ export async function activate(context: vscode.ExtensionContext) {
 
   function sendSvg(event: vscode.TextEditorSelectionChangeEvent) {
     const { selections, textEditor } = event;
-    if (selections[0] && !selections[0].isEmpty) {
-      const { document } = textEditor;
+    if (!selections[0] || selections[0].isEmpty) return
 
-      language = document.languageId;
-      text = document.getText(textEditor.selection);
+    const { document } = textEditor;
 
-      svg = generator
-        .updateOptions({ ...options, language })
-        .parseCode(text)
-        .generateSvg();
+    language = document.languageId;
+    text = document.getText(textEditor.selection);
 
-      panel.webview.postMessage({
-        type: "update",
-        svg,
-      });
-    }
+    svg = generator
+      .updateOptions({ ...options, language })
+      .parseCode(text)
+      .generateSvg();
+
+    panel.webview.postMessage({
+      type: "update",
+      svg,
+    });
+
   }
 
   const debounceSend = debounce(sendSvg, 200);
