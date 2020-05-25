@@ -1,11 +1,25 @@
 {
 	"name": "polafaux",
 	"displayName": "PolaFaux",
-	"description": "",
-	"version": "0.0.1",
+	"publisher": "Elinks",
+	"description": "Turn real code into faux code as SVG",
+	"version": "1.0.0",
+	"license": "MIT",
+	"repository": {
+		"url": "https://github.com/ElinksFr/Polafaux"
+	},
 	"engines": {
 		"vscode": "^1.45.0"
 	},
+	"keywords": [
+		"polafaux",
+		"capture",
+		"screenshot",
+		"snippet",
+		"share",
+		"svg",
+		"style"
+	],
 	"categories": [
 		"Other"
 	],
@@ -83,12 +97,15 @@
 		"@types/vscode": "^1.45.0",
 		"@typescript-eslint/eslint-plugin": "^2.30.0",
 		"@typescript-eslint/parser": "^2.30.0",
+		"bufferutil": "^4.0.1",
+		"canvas": "^2.5.0",
 		"chai": "^4.2.0",
 		"eslint": "^6.8.0",
 		"glob": "^7.1.6",
-		"mocha": "^7.1.2",
 		"is-svg": "^4.2.1",
+		"mocha": "^7.1.2",
 		"typescript": "^3.8.3",
+		"utf-8-validate": "^5.0.2",
 		"vscode-test": "^1.3.0"
 	},
 	"dependencies": {
