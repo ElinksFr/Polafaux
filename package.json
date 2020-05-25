@@ -3,7 +3,7 @@
 	"displayName": "PolaFaux",
 	"publisher": "Elinks",
 	"description": "Turn real code into faux code as SVG",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"license": "MIT",
 	"repository": {
 		"url": "https://github.com/ElinksFr/Polafaux"
