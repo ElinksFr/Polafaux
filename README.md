@@ -23,9 +23,11 @@ The code has to look right.
 ## Demo
 
 Using default options with the theme [atom-one-dark](https://github.com/atom/one-dark-ui)
+
 ![basic](./demo/demo-1.svg)
 
 Using squared lines, including line numbers with the theme [gruvbox-light](https://github.com/morhetz/gruvbox#light-mode)
+
 ![square](./demo/demo-2.svg)
 
 ## Credit
