@@ -105,25 +105,32 @@ class Generator {
         };
 
         const splitAndTrim = (text: string) => {
-            const output = [];
+            interface Segment {
+                start: number; text?: string
+            }
+
+            const output: Segment[] = [];
             const { length } = text;
             let segment:
-                | { start: number; end?: number; text?: string; length?: number }
+                | Segment
                 | undefined;
-            for (let position = 0; position <= length; position += 1) {
-                if (!segment && text[position] !== " ") {
-                    segment = { start: position };
+
+            range(text.length + 1).forEach(i => {
+                const char = text[i]
+                let reset = false
+                if (!segment && char !== " ") {
+                    segment = { start: i };
+                    reset = true
                 }
-                if (segment && !segment.end) {
-                    if (text[position] === " " || position === length) {
-                        segment.end = position;
-                        segment.text = text.slice(segment.start, segment.end);
-                        segment.length = segment.text.length;
+                if (segment && !reset) {
+                    if (char === " " || i === length) {
+                        segment.text = text.slice(segment.start, i);
                         output.push(segment);
                         segment = undefined;
                     }
                 }
-            }
+            })
+
             return output;
         };
 
