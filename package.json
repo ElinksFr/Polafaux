@@ -111,6 +111,6 @@
 	"dependencies": {
 		"highlight.js": "^10.0.3",
 		"jsdom": "^16.2.2",
-		"postcss": "^7.0.30"
+		"postcss": "^7.0.36"
 	}
 }
